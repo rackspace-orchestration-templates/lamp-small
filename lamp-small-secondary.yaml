@@ -38,6 +38,12 @@ parameters:
     type: string
   php_myadmin:
     type: boolean
+  ansible_branch:
+    type: string
+    default: stable
+  ansible_repo:
+    type: string
+    default: https://github.com/rackspace-orchestration-templates/ansible-roles.git
 resources:
   upload_role_config:
     type: OS::Heat::SoftwareConfig
