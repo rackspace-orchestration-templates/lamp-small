@@ -120,7 +120,7 @@ parameters:
       - range: { min: 0, max: 10 }
   secondary_template:
     type: string
-    default: https://raw.githubusercontent.com/rackspace-orchestration-templates/lamp-small/master/lamp-small-secondary.yaml
+    default: https://raw.githubusercontent.com/rackspace-orchestration-templates/lamp-small/stable/lamp-small-secondary.yaml
     label: Secondary Template
     description: Template to use for secondary servers
   ansible_branch:
@@ -174,10 +174,15 @@ resources:
       group: script
       outputs:
       - name: results
-      config: |
-        #!/bin/bash
-        set -e
-        git clone -b 'stable' --single-branch --progress https://github.com/rackspace-orchestration-templates/ansible-roles.git /etc/ansible/roles > $heat_outputs_path.results 2>&1
+      config:
+        str_replace:
+          template: |
+            #!/bin/bash
+            set -e
+            git clone -b 'tag' --single-branch --progress repository /etc/ansible/roles > $heat_outputs_path.results 2>&1
+          params:
+            tag: { get_param: ansible_branch}
+            repository: { get_param: ansible_repo }
 
   lamp_config:
     type: OS::Heat::SoftwareConfig
@@ -341,7 +346,8 @@ resources:
     type: Rackspace::Cloud::BackupConfig
     depends_on: lamp_server
     properties:
-      host_ip_address: { get_attr: [lamp_server, accessIPv4] }
+      #host_ip_address: { get_attr: [lamp_server, accessIPv4] }
+      server: { get_resource: lamp_server }
       BackupConfigurationName:
         str_replace:
           template: stack Weekly Backup
