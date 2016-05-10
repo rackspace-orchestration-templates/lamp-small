@@ -131,12 +131,6 @@ parameters:
     label: Secondary Template
     description: Template to use for secondary servers
     immutable: true
-  secondary_template:
-    type: string
-    default: http://catalog.rs-heat.com/wordpress-small/wordpress-small-secondary.yaml
-    label: Secondary Template
-    description: Template to use for secondary servers
-    immutable: true
   ansible_source:
     type: string
     default: http://catalog.rs-heat.com/ansible-roles/ansible-roles.tar.gz
