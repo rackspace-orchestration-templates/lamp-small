@@ -19,6 +19,7 @@ parameters:
       - 4 GB General Purpose v1
       - 8 GB General Purpose v1
   server_image:
+    type: string
     default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM) (Orchestration)
     label: Server Image
     description: Image to be used for all servers in this stack
