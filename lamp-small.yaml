@@ -23,7 +23,6 @@ parameter_groups:
   - php_myadmin
 - label: rax-dev-params
   parameters:
-  - server_image
   - secondary_template
   - ansible_source
 parameters:
