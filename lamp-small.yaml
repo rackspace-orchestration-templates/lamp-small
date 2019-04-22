@@ -110,12 +110,12 @@ parameters:
       - 64GB Instance
   server_image:
     type: string
-    default: Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM) (Orchestration)
+    default: Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM) (Orchestration)
     label: Server Image
     description: Image to be used for all servers in this stack
     constraints:
     - allowed_values:
-      - Ubuntu 14.04 LTS (Trusty Tahr) (PVHVM) (Orchestration)
+      - Ubuntu 16.04 LTS (Xenial Xerus) (PVHVM) (Orchestration)
       - CentOS 7 (PVHVM) (Orchestration)
     immutable: true
   server_count:
@@ -141,8 +141,6 @@ resources:
   #Passwords
   database_pass:
     type: OS::Heat::RandomString
-  holland_pass:
-    type: OS::Heat::RandomString
   #SSH Key
   ssh_key:
     type: OS::Nova::KeyPair
@@ -167,9 +165,6 @@ resources:
       users:
       - name: { get_param: db_user }
         password: { get_attr: [database_pass, value] }
-        databases: [ { get_param: db_name } , phpmyadmin]
-      - name: holland
-        password: { get_attr: [holland_pass, value] }
         databases: [ { get_param: db_name } , phpmyadmin]
   #Software Configurations
   upload_role_config:
@@ -202,7 +197,6 @@ resources:
           - common
           - apache
           - php
-          - holland
           - phpmyadmin
   other_config:
     type: OS::Heat::SoftwareConfig
@@ -245,10 +239,6 @@ resources:
       input_values:
         apache_default_domain: { get_param: lamp_url }
         tz: "America/Chicago"
-        holland_mysql_user: "holland"
-        holland_mysql_password: {  get_attr: [holland_pass, value] }
-        holland_mysql_host: { get_attr: [lamp_database, hostname] }
-        holland_create_user: "no"
         phpmyadmin_install: { get_param: php_myadmin }
         phpmyadmin_host: { get_attr: [lamp_database, hostname] }
         phpmyadmin_user: { get_param: db_user }
@@ -359,8 +349,6 @@ resources:
           params:
             stack: { get_param: "OS::stack_name" }
       Inclusions:
-      - FilePath: "/var/spool/holland"
-        FileItemType: "Folder"
       - FilePath: "/var/www"
         FileItemType: "Folder"
       NotifyFailure: true
